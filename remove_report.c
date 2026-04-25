@@ -39,6 +39,7 @@ void cmd_remove_report(const char *role, const char *user, const char *district,
     for (int i = target_idx + 1; i < total; i++) {
         lseek(fd, (off_t)(i * sizeof(Report)), SEEK_SET);
         read(fd, &r, sizeof(Report));
+        r.id-=1; // decrementing id for all reports after the deleted one, ensuring they remain sequential
         lseek(fd, (off_t)((i - 1) * sizeof(Report)), SEEK_SET);
         write(fd, &r, sizeof(Report));
     }
