@@ -1,7 +1,0 @@
-# Ignore compiled binary and test artifacts
-city_manager
-downtown/
-testdistrict/
-active_reports-*
-=:2
-*.o
