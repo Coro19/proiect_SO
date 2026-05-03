@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "city_manager.h"
-
+//export PATH=$PATH:$(pwd)
 int main(int argc, char*argv[]){
     char *role = NULL;
     char *user = NULL;
@@ -19,6 +19,7 @@ int main(int argc, char*argv[]){
         else if (strcmp(argv[i], "--view") == 0)          { command = "view";            arg1 = argv[++i]; arg2 = argv[++i]; }
         else if (strcmp(argv[i], "--remove_report") == 0) { command = "remove_report";   arg1 = argv[++i]; arg2 = argv[++i]; }
         else if (strcmp(argv[i], "--update_threshold")==0){ command = "update_threshold";arg1 = argv[++i]; arg2 = argv[++i]; }
+        else if (strcmp(argv[i], "--remove_district") ==0){ command = "remove_district"; arg1 = argv[++i]; }
         else if (strcmp(argv[i], "--filter") == 0)        { command = "filter";          arg1 = argv[++i];
              while (i + 1 < argc && argv[i+1][0] != '-') {
                 conditions[cond_count++] = argv[++i];
@@ -43,7 +44,9 @@ int main(int argc, char*argv[]){
         cmd_remove_report(role,user,arg1,atoi(arg2));
     else if(strcmp(command,"update_threshold")==0)
         cmd_update_threshold(role,user,arg1,atoi(arg2));
+    else if (strcmp(command, "remove_district") == 0)
+        cmd_remove_district(role, user, arg1);
     else if(strcmp(command,"filter")==0)
-    cmd_filter(role, user, arg1, conditions, cond_count);
-        return 0;
+        cmd_filter(role, user, arg1, conditions, cond_count);
+    return 0;
 }

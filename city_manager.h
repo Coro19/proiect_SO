@@ -1,6 +1,6 @@
 #pragma once
 #include <time.h>
-
+#include <sys/stat.h>
 #define INSPECTOR_LEN 64
 #define CATEGORY_LEN 32
 #define DESC_LEN 128
@@ -28,3 +28,5 @@ int check_permission(const char *path, const char *role, int need_read, int need
 void log_action(const char *district, const char *user, const char *role, const char *action);
 void init_district(const char *district);
 void check_symlink(const char *district);
+void cmd_remove_district(const char *role, const char *user, const char *district);
+void notify_monitor(const char *district);

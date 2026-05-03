@@ -1,10 +1,14 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
 #include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <time.h>
 #include <sys/stat.h>
 #include "city_manager.h"
+
+#define PID_FILE ".monitor_pid"
 
 void log_action(const char *district, const char *user, const char *role, const char *action) {
     char path[256];
@@ -15,6 +19,27 @@ void log_action(const char *district, const char *user, const char *role, const 
     int len = snprintf(entry, sizeof(entry), "%ld\t%s\t%s\t%s\n", time(NULL), user, role, action);
     write(fd, entry, len);
     close(fd);
+}
+void notify_monitor(const char *district){
+    int fd = open(PID_FILE, O_RDONLY);
+    if(fd < 0) {
+        log_action(district, "system", "system", "monitor could not be informed: no PID file");
+        return;
+    }
+    char pidbuf[32];
+    int len = read(fd, pidbuf, sizeof(pidbuf) - 1);
+    close(fd);
+    if (len <= 0) {
+        log_action(district, "system", "system", "monitor could not be informed: empty PID file");
+        return;
+    }
+    pidbuf[len] = '\0';
+    pid_t monitor_pid = (pid_t)atoi(pidbuf);
+    if (kill(monitor_pid, SIGUSR1) < 0) {
+        log_action(district, "system", "system", "monitor could not be informed: signal failed");
+        return;
+    }
+     log_action(district, "system", "system", "monitor informed of new report");
 }
 void cmd_add(const char *role, const char *user, const char *district){
     init_district(district);
@@ -44,5 +69,6 @@ void cmd_add(const char *role, const char *user, const char *district){
     close(fd);
 
     log_action(district, user, role, "add");
+    notify_monitor(district);
     printf("Report %d successfully added to %s\n", r.id, district);
 }

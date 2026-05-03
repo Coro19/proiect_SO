@@ -15,3 +15,8 @@ While Claude got the general logic right, it had some vulnerabilities such as in
 #what I learned
 
 Claude can give a general solution to my problem, but lacks certain edge-cases. It can speed up what I do, but I always need to double-check its output.
+
+#Phase 2
+
+I asked Claude for help with the remove_district function for the child process and I learned to use _exit.
+I also asked Claude for help regarding struct sigaction and it suggested using gnu11.
