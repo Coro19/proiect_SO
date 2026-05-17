@@ -18,6 +18,23 @@ void handle_signal(int sig) {
 }
 
 int main(void) {
+    if (access(PID_FILE, F_OK) == 0) {
+        int fd = open(PID_FILE, O_RDONLY);
+        if (fd >= 0) {
+            char buf[32];
+            int len = read(fd, buf, sizeof(buf) - 1);
+            close(fd);
+            if (len > 0) {
+                buf[len] = '\0';
+                pid_t existing = (pid_t)atoi(buf);
+                if (kill(existing, 0) == 0) {
+                    printf("ERROR|Monitor already running with PID %d\n", existing);
+                    fflush(stdout);
+                    return 1;
+                }
+            }
+        }
+    }
     int fd = open(PID_FILE, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (fd < 0) {
         printf("Error: cannot create %s\n", PID_FILE);
