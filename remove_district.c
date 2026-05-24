@@ -10,7 +10,7 @@ void cmd_remove_district(const char *role, const char *user, const char *distric
         return;
     }
     log_action(district, user, role, "remove_district");
-    // Fork a child to run rm -rf
+    //forking child to run rm -rf
     pid_t pid = fork();
     if (pid < 0) {
         printf("Fork failed.\n");
@@ -24,7 +24,6 @@ void cmd_remove_district(const char *role, const char *user, const char *distric
     int status;
     waitpid(pid, &status, 0);
     if (WIFEXITED(status) && WEXITSTATUS(status) == 0) {
-        // Remove the symlink
         char linkname[256];
         snprintf(linkname, sizeof(linkname), "active_reports-%s", district);
         unlink(linkname);

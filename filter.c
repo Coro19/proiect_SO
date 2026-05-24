@@ -35,6 +35,8 @@ int match_condition(Report *r, const char *field, const char *op, const char *va
         if (strcmp(op, "<=") == 0) return r->severity <= v;
         if (strcmp(op, ">")  == 0) return r->severity >  v;
         if (strcmp(op, ">=") == 0) return r->severity >= v;
+        printf("Warning: operator %s not supported for severity.\n", op);
+        return 0;
     } else if (strcmp(field, "category") == 0) {
         int cmp = strcmp(r->category, value);
         if (strcmp(op, "==") == 0) return cmp == 0;
@@ -45,6 +47,8 @@ int match_condition(Report *r, const char *field, const char *op, const char *va
         int cmp = strcmp(r->inspector, value);
         if (strcmp(op, "==") == 0) return cmp == 0;
         if (strcmp(op, "!=") == 0) return cmp != 0;
+        printf("Warning: operator %s not supported for string fields.\n", op);
+        return 0;
     } else if (strcmp(field, "timestamp") == 0) {
         time_t v = (time_t)atol(value);
         if (strcmp(op, "==") == 0) return r->timestamp == v;
@@ -53,6 +57,8 @@ int match_condition(Report *r, const char *field, const char *op, const char *va
         if (strcmp(op, "<=") == 0) return r->timestamp <= v;
         if (strcmp(op, ">")  == 0) return r->timestamp >  v;
         if (strcmp(op, ">=") == 0) return r->timestamp >= v;
+        printf("Warning: operator %s not supported for timestamp.\n", op);
+        return 0;
     }
     printf("Warning: unknown field '%s'.\n", field);
     return 0;

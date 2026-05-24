@@ -30,7 +30,7 @@ void init_district(const char *district){
 
     //district.cfg
     snprintf(path,sizeof(path),"%s/district.cfg",district);
-    fd = open(path,O_CREAT | O_WRONLY | O_APPEND, 0640);
+    fd = open(path,O_CREAT | O_EXCL | O_WRONLY, 0640);
     if( fd >= 0){
         write(fd, "threshold=1\n",12);
         close(fd);

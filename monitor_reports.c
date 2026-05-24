@@ -9,9 +9,9 @@
 
 void handle_signal(int sig) {
     if (sig == SIGUSR1)
-        write(STDOUT_FILENO, "Monitor: new report added.\n", 27);
+        write(STDOUT_FILENO, "REPORT|Monitor: new report added.\n", 34);
     else if (sig == SIGINT) {
-        write(STDOUT_FILENO, "Monitor: shutting down.\n", 24);
+        write(STDOUT_FILENO, "EXIT|Monitor: shutting down.\n", 29);
         unlink(PID_FILE);
         _exit(0);
     }
@@ -37,7 +37,7 @@ int main(void) {
     }
     int fd = open(PID_FILE, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (fd < 0) {
-        printf("Error: cannot create %s\n", PID_FILE);
+        printf("ERROR|Cannot create %s\n", PID_FILE);
         return 1;
     }
     char pidbuf[32];
@@ -45,8 +45,8 @@ int main(void) {
     write(fd, pidbuf, len);
     close(fd);
 
-    printf("Monitor started with PID %d\n", getpid());
-
+    printf("INFO|Monitor started with PID %d\n", getpid());
+    fflush(stdout);
     struct sigaction sa_usr1;
     sa_usr1.sa_handler = handle_signal;
     sigemptyset(&sa_usr1.sa_mask);
